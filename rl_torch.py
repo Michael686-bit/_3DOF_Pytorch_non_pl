@@ -148,7 +148,8 @@ class DDPG(object):
         # latest_file_name = "params_20240806_194424.pth"
         # file_path = os.path.join(save_path, latest_file_name)  # 使用传入的文件名
 
-        checkpoint = torch.load(file_path)
+        # checkpoint = torch.load(file_path) #torch.load(file_path, map_location=torch.device('cpu'))
+        checkpoint = torch.load(file_path, map_location=torch.device('cpu'))
         self.actor_eval.load_state_dict(checkpoint['actor_eval'])
         self.actor_target.load_state_dict(checkpoint['actor_target'])
         self.critic_eval.load_state_dict(checkpoint['critic_eval'])
