@@ -13,6 +13,7 @@ Feature & reward engineering.
 from env import ArmEnv
 # from rl import DDPG
 from rl_torch import DDPG
+import numpy as np
 
 MAX_EPISODES = 900
 MAX_EP_STEPS = 300
@@ -146,7 +147,7 @@ def eval_p2p():
         print(f"angle_all = {angle_all}")
 
         timer += 1
-        if timer > 500:
+        if timer > 50 * 0.3:
             done_4p = 1
 
     x_vals = [point[0] for point in traj_all]
@@ -165,40 +166,61 @@ def eval_p2p():
     from mpl_toolkits.mplot3d import Axes3D
 
     # Create a new figure for 3D plotting
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111, projection='3d')
 
     # Plotting the 3D curve
-    ax.plot(x_vals, y_vals, z_vals, label='3D Curve')
-    ax.scatter(0, 42.5, 39.23, c='red', marker='o', s=100)
-    ax.scatter(81.73, 0, 0, c='green', marker='o', s=100)
+    ax1.plot(x_vals, y_vals, z_vals, label='3D Curve')
+    ax1.scatter(0, 42.5, 39.23, c='red', marker='o', s=100)
+    ax1.scatter(81.73, 0, 0, c='green', marker='o', s=100)
 
     # Setting labels for the axes
-    ax.set_xlabel('X axis')
-    ax.set_ylabel('Y axis')
-    ax.set_zlabel('Z axis')
+    ax1.set_xlabel('X axis')
+    ax1.set_ylabel('Y axis')
+    ax1.set_zlabel('Z axis')
 
     # Display the legend
-    ax.legend()
+    ax1.legend()
 
     # Show the plot
-    plt.show()
+    # plt.show()
 
     # 画出关节角度图像  Draw the joint Angle image
     # Create a new figure for 3D plotting
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111, projection='3d')
 
     # Plotting the 3D curve
-    ax.plot(q1_vals, q2_vals, q3_vals, label='3D Curve')
+    ax2.plot(q1_vals, q2_vals, q3_vals, label='3D Curve')
 
     # Setting labels for the axes
-    ax.set_xlabel('q1 axis')
-    ax.set_ylabel('q2 axis')
-    ax.set_zlabel('q3 axis')
+    ax2.set_xlabel('q1 axis')
+    ax2.set_ylabel('q2 axis')
+    ax2.set_zlabel('q3 axis')
 
     # Display the legend
-    ax.legend()
+    ax2.legend()
+
+    fig3 = plt.figure()#figsize=(10,7.5)
+    ax3 = fig3.add_subplot(111) # 2D 图像
+
+    time_steps = np.linspace(0, 1, len(q1_vals))
+
+    # Plotting the 2D curve
+    # ax3.figure(figsize=(10, 6))
+    ax3.plot(time_steps, q1_vals[:], label='Joint 1')
+    ax3.plot(time_steps, q2_vals[:], label='Joint 2')
+    ax3.plot(time_steps, q3_vals[:], label='Joint 3')
+
+
+
+    ax3.set_xlabel('Normalized Time', fontsize=14)
+    ax3.set_ylabel('Joint Angle (radians)', fontsize=14)
+    ax3.set_title('Joint Angles over Time', fontsize=16)
+    ax3.grid(True)
+
+    # Display the legend
+    ax3.legend(fontsize=10)
 
     # Show the plot
     plt.show()

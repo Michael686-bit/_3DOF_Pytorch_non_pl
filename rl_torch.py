@@ -143,10 +143,10 @@ class DDPG(object):
 
         latest_file_name = os.listdir(save_path)[-1]  # 获取最后一个文件名
         print(f"restore model = {latest_file_name}")
-        file_path = os.path.join(save_path, latest_file_name)  # 使用传入的文件名
-
-        # latest_file_name = "params_20240806_194424.pth"
         # file_path = os.path.join(save_path, latest_file_name)  # 使用传入的文件名
+
+        latest_file_name = "params_20240811_024842.pth"
+        file_path = os.path.join(save_path, latest_file_name)  # 使用传入的文件名
 
         # checkpoint = torch.load(file_path) #torch.load(file_path, map_location=torch.device('cpu'))
         checkpoint = torch.load(file_path, map_location=torch.device('cpu'))
