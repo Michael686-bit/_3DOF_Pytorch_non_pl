@@ -73,13 +73,15 @@ class ArmEnv(object):
         phi = np.random.uniform(0, np.pi)  # 随机生成角度 φ，范围 [0, π)
         r = l_max * np.cbrt(np.random.uniform(0, 1))  # 随机生成半径 r，使用 cbrt(random) 保证均匀分布
 
-        self.goal['x'] = r * np.sin(phi) * np.cos(theta)  # 将球坐标转换为笛卡尔坐标 x
-        self.goal['y'] = r * np.sin(phi) * np.sin(theta)  # 将球坐标转换为笛卡尔坐标 y
-        self.goal['z'] = r * np.cos(phi)  # 将球坐标转换为笛卡尔坐标 z
+        # self.goal['x'] = r * np.sin(phi) * np.cos(theta)  # 将球坐标转换为笛卡尔坐标 x
+        # self.goal['y'] = r * np.sin(phi) * np.sin(theta)  # 将球坐标转换为笛卡尔坐标 y
+        # self.goal['z'] = r * np.cos(phi)  # 将球坐标转换为笛卡尔坐标 z
 
-        # self.goal['x'] = 0  # 将球坐标转换为笛卡尔坐标 x
-        # self.goal['y'] = 42.5 # 将球坐标转换为笛卡尔坐标 y
-        # self.goal['z'] = 39.23 # 将球坐标转换为笛卡尔坐标 z
+        r_new = 30 * np.cbrt(np.random.uniform(0, 1))
+        self.goal['x'] = 0  + r_new * np.sin(phi) * np.cos(theta)# 将球坐标转换为笛卡尔坐标 x
+        self.goal['y'] = 42.5 + r_new * np.sin(phi) * np.sin(theta)# 将球坐标转换为笛卡尔坐标 y
+        self.goal['z'] = 39.23 + r_new * np.cos(phi)# 将球坐标转换为笛卡尔坐标 z
+        print(f"goal = {self.goal['x'],self.goal['y'],self.goal['z']}")
 
         # self.arm_info['r'] = 2 * np.pi * np.random.rand(3)
         self.arm_info['r'] = 0
@@ -95,7 +97,7 @@ class ArmEnv(object):
         self.on_goal = 0
 
         s, r, done, self.arm_info['r'] = self.update_state_all()
-        return s
+        return s, r, done, self.arm_info['r']
 
     def set_goal(self,goal_x ,goal_y,goal_z):
         self.goal['x'] = goal_x
@@ -219,7 +221,7 @@ if __name__ == '__main__':
 
     print(f"q1_vals = {q1_vals}")
     print(f"q2_vals = {q2_vals}")
-    print(f"q2_vals = {q3_vals}")
+    print(f"q3_vals = {q3_vals}")
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D

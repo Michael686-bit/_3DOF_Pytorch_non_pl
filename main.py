@@ -30,6 +30,9 @@ rl = DDPG(a_dim, s_dim, a_bound)
 
 steps = []
 def train():
+    # 是否载入原有模型
+    # rl.restore()
+
     reward_all = []
     # start training
     for i in range(MAX_EPISODES):
@@ -126,14 +129,16 @@ def eval_p2p():
     env.render()
     env.viewer.set_vsync(True)
     # s = env.reset()
-    s = env.reset_start()
+    s, r, done, angle_all = env.reset_start()
     print(f"s = {s}")
-    env.set_goal(60, 60,60)
+    env.set_goal(20,42.5,39.2)  #  修改
     done = 0
     done_4p = 0
     timer = 0
     traj_all = []
+    traj_all.append((s[3] , s[4] , s[5] ))
     traj_q_all = []
+    traj_q_all.append((angle_all[0], angle_all[1], angle_all[2]))
 
     ang_traj = []
     while not done_4p:
@@ -145,22 +150,24 @@ def eval_p2p():
         traj_all.append((s[3] , s[4] , s[5] ))
         traj_q_all.append((angle_all[0], angle_all[1], angle_all[2]))
         print(f"angle_all = {angle_all}")
+        print(f"r = {r}")
 
         timer += 1
-        if timer > 50 * 0.3:
+        if timer > 300:
             done_4p = 1
 
     x_vals = [point[0] for point in traj_all]
     y_vals = [point[1] for point in traj_all]
     z_vals = [point[2] for point in traj_all]
+    print(f"orig = {x_vals[0],y_vals[0] , z_vals[0]}")
 
     q1_vals = [point[0] for point in traj_q_all]
     q2_vals = [point[1] for point in traj_q_all]
     q3_vals = [point[2] for point in traj_q_all]
 
-    print(f"q1_vals = {q1_vals}")
-    print(f"q2_vals = {q2_vals}")
-    print(f"q2_vals = {q3_vals}")
+    # print(f"q1_vals = {q1_vals}")
+    # print(f"q2_vals = {q2_vals}")
+    # print(f"q2_vals = {q3_vals}")
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -171,7 +178,8 @@ def eval_p2p():
 
     # Plotting the 3D curve
     ax1.plot(x_vals, y_vals, z_vals, label='3D Curve')
-    ax1.scatter(0, 42.5, 39.23, c='red', marker='o', s=100)
+    # ax1.scatter(0, 42.5, 39.23, c='red', marker='o', s=100) #self.goal['x'],self.goal['y'],self.goal['z']
+    ax1.scatter(env.goal['x'],env.goal['y'],env.goal['z'], c='red', marker='o', s=100)
     ax1.scatter(81.73, 0, 0, c='green', marker='o', s=100)
 
     # Setting labels for the axes
